@@ -9,3 +9,7 @@ Launch attacker moves and defender responses on a shared timeline, under fog of 
 **Live:** https://jon.glass/scrimmage/
 
 A single self-contained page with no build step. Open `index.html` or serve the folder over HTTPS.
+
+## License
+
+MIT © 2026 [Jon Glass](https://jon.glass/). Use it however you like; just keep the copyright notice. See [LICENSE](LICENSE).
