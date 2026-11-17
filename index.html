@@ -306,7 +306,7 @@
       <span class="lbl">Load scenario</span>
       <button class="btn sm" data-scenario="ransomware">Ransomware intrusion</button>
       <button class="btn sm" data-scenario="phish-lateral">Phish → lateral</button>
-      <button class="btn sm" data-scenario="kestrel" title="The Kestrel Freight practice case at jon.glass/cases/kestrel">Kestrel case</button>
+      <button class="btn sm" data-scenario="arclight" title="The Arclight Industries practice case at jon.glass/cases/arclight">Arclight case</button>
       <button class="btn primary sm" id="resetBtn">Reset</button>
     </div>
   </header>
@@ -444,7 +444,7 @@
     { tactic: "Execution / Persistence", id: "persist", nm: "Establish persistence", ds: "Scheduled task + signed implant survives reboot.", dur: 10, tags: ["T1053"], detectAt: 3,
       needs: s => anyComp(s), apply: s => { addPersist(s, firstComp(s)); } },
     { tactic: "Credential Access", id: "creddump", nm: "Dump credentials", ds: "Harvest cached creds from a compromised host.", dur: 15, tags: ["T1003"], detectAt: 2,
-      needs: s => anyComp(s), apply: s => { addCred(s, "svc_backup"); addCred(s, "jdoe"); } },
+      needs: s => anyComp(s), apply: s => { addCred(s, "svc_backup"); addCred(s, "vpenn"); } },
     { tactic: "Discovery", id: "recon", nm: "Network discovery", ds: "Map reachable hosts and shares.", dur: 10, tags: ["T1046"], detectAt: 3,
       needs: s => anyComp(s), apply: s => {} },
     { tactic: "Lateral Movement", id: "lateral", nm: "Lateral movement", ds: "Stolen creds reach file server FILE-01 and peer workstation WKS-07 — normal-looking logons.", dur: 20, tags: ["T1021"], detectAt: 3,
@@ -486,12 +486,12 @@
   const RED_RECIPES = {
     "smash-grab": { nm: "Smash & grab (phish → dump → lateral)", steps: [["phish",0],["creddump",5],["lateral",20]] },
     "full-ransom": { nm: "Full ransomware chain", steps: [["phish",0],["persist",5],["creddump",15],["lateral",35],["escalate",60],["ransom",90]] },
-    // jon.glass/cases/kestrel: minutes after the 13:09 click
-    "kestrel": { nm: "Kestrel case (phish → persist → recon → dump → lateral)", steps: [["phish",0],["persist",2],["recon",32],["creddump",56],["lateral",72]] },
+    // jon.glass/cases/arclight: minutes after the 13:09 click
+    "arclight": { nm: "Arclight case (phish → persist → recon → dump → lateral)", steps: [["phish",0],["persist",2],["recon",32],["creddump",56],["lateral",72]] },
   };
   const BLUE_RECIPES = {
     "isolate-only": { nm: "Isolate initial host (weak)", steps: [["isolate1",10]] },
-    "kestrel-soc": { nm: "Kestrel SOC: isolate WKS-01 at 16:05 (what happened)", steps: [["isolate1",176]] },
+    "arclight-soc": { nm: "Arclight SOC: isolate WKS-01 at 16:05 (what happened)", steps: [["isolate1",176]] },
     "hunt-contain": { nm: "Hunt-led containment", steps: [["raiselog",0],["hunt",10],["malware",15],["forensics",20],["isolateAll",80],["revokecreds",95],["certblock",110]] },
   };
 
@@ -725,7 +725,7 @@
     S = fresh();
     if (name === "ransomware") queueRecipe("red", RED_RECIPES["full-ransom"]);
     else if (name === "phish-lateral") queueRecipe("red", RED_RECIPES["smash-grab"]);
-    else if (name === "kestrel") { queueRecipe("red", RED_RECIPES.kestrel); queueRecipe("blue", BLUE_RECIPES["kestrel-soc"]); }
+    else if (name === "arclight" || name === "kestrel") { queueRecipe("red", RED_RECIPES.arclight); queueRecipe("blue", BLUE_RECIPES["arclight-soc"]); } // "kestrel": old Case 01 links
   }
 
   function init() {
